@@ -48,5 +48,5 @@ int _printf(const char *format, ...)
 		format++;
 	}
 	close_buffer(buffer, buf_len, &len, ls);
-	return (len);
+	return (len - 1);
 }
