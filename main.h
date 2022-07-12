@@ -24,15 +24,12 @@ char *print_percent(va_list args);
 
 char *(*get_print_func(char c))(va_list);
 
+/* Format Handler */
+int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls);
+
 /* Buffer Helpers */
 int get_buffer_index(char *buffer, int index);
 void write_buffer(char *buffer, int len, va_list list);
 int add_str_to_buffer(char *buffer, int *buf_idx, char *str);
-
-
-int get_buffer_index_checked(char *buffer, int len);
-char *create_buffer(void);
-int add_char_to_buffer(char *buffer, int buf_len, int *len, char c);
-void close_buffer(char *buffer, int buf_len, int *len, va_list ls);
 
 #endif
