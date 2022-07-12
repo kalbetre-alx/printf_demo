@@ -2,28 +2,6 @@
 #include <unistd.h>
 
 /**
- * get_str - Get the string pointer from chars
- * @count: the number of elements
- *
- * Return: a char array of passed elements
- */
-char *get_str(const int count, ...)
-{
-	va_list list;
-	int i;
-	char *str;
-
-	str = malloc(sizeof(char) * (count + 1));
-	va_start(list, count);
-	for (i = 0; i < count; i++)
-		str[i] = va_arg(list, int);
-
-	str[i] = '\0';
-	return (str);
-}
-
-
-/**
  * handle_frmt - processes normal formatting of a printf
  * @frmt: the format string
  * @buf: current buffer
@@ -48,8 +26,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 	}
 	else
 	{
-		frmt++;
-		error_flag = *frmt == '\0';
+		error_flag = *(frmt++) == '\0';
 		if (error_flag)
 			return (-1);
 		print_func = get_print_func(*frmt);
@@ -62,8 +39,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		}
 		else
 		{
-			temp_str = print_func(ls);
-			error_flag = temp_str == NULL;
+			error_flag = (temp_str = print_func(ls)) == NULL;
 			if (error_flag)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
