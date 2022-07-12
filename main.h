@@ -24,6 +24,10 @@ char *print_percent(va_list args);
 
 char *(*get_print_func(char c))(va_list);
 
+/* Buffer Helpers */
+int get_buffer_index(char *buffer, int index);
+
+
 int get_buffer_index_checked(char *buffer, int len);
 void write_buffer(char *buffer, int len, va_list list);
 char *create_buffer(void);

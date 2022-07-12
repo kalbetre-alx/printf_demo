@@ -1,22 +1,6 @@
 #include "main.h"
 #include <unistd.h>
 
-/**
- * check_buffer_overflow - if writing over buffer space,
- * print everything then revert length back to 0 to write at buffer start
- * @buffer: buffer holding string to print
- * @len: position in buffer
- * Return: length position
- */
-int check_buffer_overflow(char *buffer, int len)
-{
-	if (len > 1020)
-	{
-		write(1, buffer, len);
-		len = 0;
-	}
-	return (len);
-}
 
 /**
  * _printf - prints a string
@@ -26,82 +10,79 @@ int check_buffer_overflow(char *buffer, int len)
  */
 int _printf(const char *format, ...)
 {
-	int len = 0, total_len = 0, i = 0, j = 0;
 	va_list list;
-	char *buffer, *str;
-	char* (*f)(va_list);
+	char* (*print_func)(va_list);
+	int buf_idx = 0, str_len = 0, j = 0;
+	char *buffer, *temp_str;
 
-	if (format == NULL)
-		return (-1);
-
-	buffer = create_buffer();
-	if (buffer == NULL)
+	buffer = malloc(sizeof(char) * 1024);
+	if (format == NULL || buffer == NULL)
 		return (-1);
 
 	va_start(list, format);
 
-	while (format[i] != '\0')
+	while (*format != '\0')
 	{
-		if (format[i] != '%') /* copy format into buffer until '%' */
+		if (*format != '%')
 		{
-			len = check_buffer_overflow(buffer, len);
-			buffer[len++] = format[i++];
-			total_len++;
+			buf_idx = get_buffer_index(buffer, buf_idx);
+			buffer[buf_idx++] = *format;
+			format++;
+			str_len++;
 		}
-		else /* if %, find function */
+		else
 		{
-			i++;
-			if (format[i] == '\0') /* handle single ending % */
+			format++;
+			if (*format == '\0')
 			{
 				va_end(list);
 				free(buffer);
 				return (-1);
 			}
-			if (format[i] == '%') /* handle double %'s */
+			if (*format == '%')
 			{
-				len = check_buffer_overflow(buffer, len);
-				buffer[len++] = format[i];
-				total_len++;
+				buf_idx = get_buffer_index(buffer, buf_idx);
+				buffer[buf_idx++] = *format;
+				str_len++;
 			}
 			else
 			{
-				f = get_print_func(format[i]); /* grab function */
-				if (f == NULL)  /* handle fake id */
+				print_func = get_print_func(*format);
+				if (print_func == NULL)
 				{
-					len = check_buffer_overflow(buffer, len);
-					buffer[len++] = '%';
-					total_len++;
-					buffer[len++] = format[i];
-					total_len++;
+					buf_idx = get_buffer_index(buffer, buf_idx);
+					buffer[buf_idx++] = '%';
+					buffer[buf_idx++] = *format;
+					str_len += 2;
 				}
-				else /* return string, copy to buffer */
+				else
 				{
-					str = f(list);
-					if (str == NULL)
+					temp_str = print_func(list);
+					if (temp_str == NULL)
 					{
 						va_end(list);
 						free(buffer);
 						return (-1);
 					}
-					if (format[i] == 'c' && str[0] == '\0')
+					if (*format == 'c' && *temp_str == '\0')
 					{
-						len = check_buffer_overflow(buffer, len);
-						buffer[len++] = '\0';
-						total_len++;
+						buf_idx = get_buffer_index(buffer, buf_idx);
+						buffer[buf_idx++] = '\0';
+						str_len++;
 					}
 					j = 0;
-					while (str[j] != '\0')
+					while (temp_str[j] != '\0')
 					{
-						len = check_buffer_overflow(buffer, len);
-						buffer[len++] = str[j];
-						total_len++;
+						buf_idx = get_buffer_index(buffer, buf_idx);
+						buffer[buf_idx++] = temp_str[j];
+						str_len++;
 						j++;
 					}
-					free(str);
+					free(temp_str);
 				}
-			} i++;
+			}
 		}
 	}
-	write_buffer(buffer, len, list);
-	return (total_len);
+	write_buffer(buffer, buf_idx, list);
+	return (str_len);
 }

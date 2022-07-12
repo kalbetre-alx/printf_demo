@@ -2,6 +2,22 @@
 #include <unistd.h>
 
 /**
+ * get_buffer_len - gets current buffer length, writes if overflow
+ * @buffer: the buffer
+ * @index: current inex in buffer
+ * 
+ * Return: length position
+ */
+int get_buffer_index(char *buffer, int index)
+{
+	if (index < 1020)
+		return (index);
+	
+	write(1, buffer, index);
+	return (0);
+}
+
+/**
  * write_buffer - prints buffer, then frees it and frees va_list
  * @buffer: buffer holding print-ables
  * @len: length of print-able string
@@ -18,19 +34,6 @@ void write_buffer(char *buffer, int len, va_list list)
 	va_end(list);
 }
 
-/**
- * create_buffer - creates buffer to hold string until it's ready for print
- * Return: pointer to buffer created
- */
-char *create_buffer(void)
-{
-	char *buffer;
-
-	buffer = malloc(sizeof(char) * 1024);
-	if (buffer == NULL)
-		return (NULL);
-	return (buffer);
-}
 
 /**
  * add_char_to_buffer - adds a character to a buffer
