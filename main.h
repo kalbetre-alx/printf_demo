@@ -26,13 +26,13 @@ char *(*get_print_func(char c))(va_list);
 
 /* Buffer Helpers */
 int get_buffer_index(char *buffer, int index);
+void write_buffer(char *buffer, int len, va_list list);
+int add_str_to_buffer(char *buffer, int *buf_idx, char *str);
 
 
 int get_buffer_index_checked(char *buffer, int len);
-void write_buffer(char *buffer, int len, va_list list);
 char *create_buffer(void);
 int add_char_to_buffer(char *buffer, int buf_len, int *len, char c);
-int add_str_to_buffer(char *buffer, int buf_len, int *len, char *str);
 void close_buffer(char *buffer, int buf_len, int *len, va_list ls);
 
 #endif

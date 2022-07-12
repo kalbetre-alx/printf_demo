@@ -12,7 +12,7 @@ int _printf(const char *format, ...)
 {
 	va_list list;
 	char* (*print_func)(va_list);
-	int buf_idx = 0, str_len = 0, j = 0;
+	int buf_idx = 0, str_len = 0;
 	char *buffer, *temp_str;
 
 	buffer = malloc(sizeof(char) * 1024);
@@ -39,12 +39,6 @@ int _printf(const char *format, ...)
 				free(buffer);
 				return (-1);
 			}
-			/* if (*format == '%')
-			{
-				buf_idx = get_buffer_index(buffer, buf_idx);
-				buffer[buf_idx++] = *format;
-				str_len++;
-			} */
 			else
 			{
 				print_func = get_print_func(*format);
@@ -70,14 +64,7 @@ int _printf(const char *format, ...)
 						buffer[buf_idx++] = '\0';
 						str_len++;
 					}
-					j = 0;
-					while (temp_str[j] != '\0')
-					{
-						buf_idx = get_buffer_index(buffer, buf_idx);
-						buffer[buf_idx++] = temp_str[j];
-						str_len++;
-						j++;
-					}
+					str_len += add_str_to_buffer(buffer, &buf_idx, temp_str);
 					free(temp_str);
 				}
 			}
