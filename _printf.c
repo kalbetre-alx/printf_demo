@@ -15,7 +15,6 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 {
 	char* (*print_func)(va_list);
 	char *temp_str;
-	int error_flag = 0;
 
 	if (*frmt != '%')
 	{
@@ -27,8 +26,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 	else
 	{
 		frmt++;
-		error_flag = *frmt == '\0';
-		if (error_flag)
+		if (*frmt == '\0')
 			return (-1);
 		print_func = get_print_func(*frmt);
 		if (print_func == NULL)
@@ -40,8 +38,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		}
 		else
 		{
-			error_flag = (temp_str = print_func(ls)) == NULL;
-			if (error_flag)
+			if ((temp_str = print_func(ls)) == NULL)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
 			{
