@@ -4,7 +4,7 @@
 /**
  * get_buffer_len - gets current buffer length, writes if overflow
  * @buffer: the buffer
- * @index: current inex in buffer
+ * @index: current index in buffer
  * 
  * Return: length position
  */
