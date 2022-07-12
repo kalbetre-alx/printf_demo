@@ -41,10 +41,11 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 
 	if (*frmt != '%')
 	{
-		temp_str = get_str(1, (char)*frmt);
-		*len += add_str_to_buffer(buf, b_idx, temp_str);
-		free(temp_str);
+		*b_idx = get_buffer_index(buf, *b_idx);
+		buf[*b_idx] = *frmt;
+		(*b_idx)++;
 		format_offset = 1;
+		(*len)++;
 	}
 	else
 	{
@@ -55,9 +56,11 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		print_func = get_print_func(*frmt);
 		if (print_func == NULL)
 		{
-			temp_str = get_str(2, '%', (char)*frmt);
-			*len += add_str_to_buffer(buf, b_idx, temp_str);
-			free(temp_str);
+			*b_idx = get_buffer_index(buf, *b_idx);
+			buf[*b_idx + 1] = '%';
+			buf[*b_idx + 2] = *frmt;
+			*b_idx += 2;
+			*len += 2;
 		}
 		else
 		{
@@ -67,9 +70,9 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
 			{
-				temp_str = get_str(1, '\0');
-				*len += add_str_to_buffer(buf, b_idx, temp_str);
-				free(temp_str);
+				*b_idx = get_buffer_index(buf, *b_idx);
+				buf[(*b_idx)++] = '\0';
+				(*len)++;
 			}
 			*len += add_str_to_buffer(buf, b_idx, temp_str);
 			free(temp_str);
