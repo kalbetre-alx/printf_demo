@@ -11,16 +11,15 @@ char *get_str(const int count, ...)
 {
 	va_list list;
 	int i;
-	char str[count + 1];
-	char *ptr;
+	char *str;
 
+	str = malloc(sizeof(char) * (count + 1));
 	va_start(list, count);
 	for (i = 0; i < count; i++)
 		str[i] = va_arg(list, int);
 
 	str[i] = '\0';
-	ptr = str;
-	return (ptr);
+	return (str);
 }
 
 
@@ -42,7 +41,9 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 
 	if (*frmt != '%')
 	{
-		len += add_str_to_buffer(buf, b_idx, get_str(1, (char)*frmt));
+		temp_str = get_str(1, (char)*frmt);
+		len += add_str_to_buffer(buf, b_idx, temp_str);
+		free(temp_str);
 		format_offset = 1;
 	}
 	else
@@ -53,7 +54,11 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 			return (-1);
 		print_func = get_print_func(*frmt);
 		if (print_func == NULL)
-			*len += add_str_to_buffer(buf, b_idx, get_str(2, '%', (char)*frmt));
+		{
+			temp_str = get_str(2, '%', (char)*frmt);
+			*len += add_str_to_buffer(buf, b_idx, temp_str);
+			free(temp_str);
+		}
 		else
 		{
 			temp_str = print_func(ls);
@@ -61,7 +66,11 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 			if (error_flag)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
-				*len += add_str_to_buffer(buf, b_idx, get_str(1, '\0'));
+			{
+				temp_str = get_str(1, '\0');
+				*len += add_str_to_buffer(buf, b_idx, temp_str);
+				free(temp_str);
+			}
 			*len += add_str_to_buffer(buf, b_idx, temp_str);
 			free(temp_str);
 		}
@@ -79,7 +88,7 @@ int _printf(const char *format, ...)
 {
 	va_list list;
 	int b_idx = 0, len = 0, result = 0;
-	char *buffer, *temp_str;
+	char *buffer;
 
 	buffer = malloc(sizeof(char) * 1024);
 	if (format == NULL || buffer == NULL)
