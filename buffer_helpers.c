@@ -56,5 +56,5 @@ int add_str_to_buffer(char *buffer, int *buf_idx, char *str)
 	}
 
 	*buf_idx = idx;
-	return (i + 1);
+	return (i);
 }
