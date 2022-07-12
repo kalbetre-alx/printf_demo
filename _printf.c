@@ -39,12 +39,12 @@ int _printf(const char *format, ...)
 				free(buffer);
 				return (-1);
 			}
-			if (*format == '%')
+			/* if (*format == '%')
 			{
 				buf_idx = get_buffer_index(buffer, buf_idx);
 				buffer[buf_idx++] = *format;
 				str_len++;
-			}
+			} */
 			else
 			{
 				print_func = get_print_func(*format);
