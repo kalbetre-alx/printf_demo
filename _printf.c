@@ -81,6 +81,7 @@ int _printf(const char *format, ...)
 					free(temp_str);
 				}
 			}
+			format++;
 		}
 	}
 	write_buffer(buffer, buf_idx, list);
