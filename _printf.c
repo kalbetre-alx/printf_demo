@@ -42,7 +42,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 	if (*frmt != '%')
 	{
 		temp_str = get_str(1, (char)*frmt);
-		len += add_str_to_buffer(buf, b_idx, temp_str);
+		*len += add_str_to_buffer(buf, b_idx, temp_str);
 		free(temp_str);
 		format_offset = 1;
 	}
