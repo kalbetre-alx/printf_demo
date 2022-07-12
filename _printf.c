@@ -26,7 +26,8 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 	}
 	else
 	{
-		error_flag = *(frmt++) == '\0';
+		frmt++;
+		error_flag = *frmt == '\0';
 		if (error_flag)
 			return (-1);
 		print_func = get_print_func(*frmt);
@@ -39,7 +40,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		}
 		else
 		{
-			error_flag = (temp_str = print_func(ls)) == NULL;
+			error_flag = temp_str = print_func(ls) == NULL;
 			if (error_flag)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
