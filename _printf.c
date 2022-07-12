@@ -37,15 +37,14 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 {
 	char* (*print_func)(va_list);
 	char *temp_str;
-	int error_flag = 0, format_offset = 2;
+	int error_flag = 0;
 
 	if (*frmt != '%')
 	{
 		*b_idx = get_buffer_index(buf, *b_idx);
-		buf[*b_idx] = *frmt;
-		(*b_idx)++;
-		format_offset = 1;
+		buf[(*b_idx)++] = *frmt;
 		(*len)++;
+		return (1);
 	}
 	else
 	{
@@ -57,9 +56,8 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		if (print_func == NULL)
 		{
 			*b_idx = get_buffer_index(buf, *b_idx);
-			buf[*b_idx + 1] = '%';
-			buf[*b_idx + 2] = *frmt;
-			*b_idx += 2;
+			buf[(*b_idx)++] = '%';
+			buf[(*b_idx)++] = *frmt;
 			*len += 2;
 		}
 		else
@@ -77,8 +75,8 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 			*len += add_str_to_buffer(buf, b_idx, temp_str);
 			free(temp_str);
 		}
+		return (2);
 	}
-	return (format_offset);
 }
 
 /**
