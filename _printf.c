@@ -40,7 +40,7 @@ int handle_frmt(const char *frmt, char *buf, int *b_idx, int *len, va_list ls)
 		}
 		else
 		{
-			error_flag = temp_str = print_func(ls) == NULL;
+			error_flag = (temp_str = print_func(ls)) == NULL;
 			if (error_flag)
 				return (-1);
 			if (*frmt == 'c' && *temp_str == '\0')
